@@ -1,2 +1,20 @@
 *.pyc
 generated_programs
+
+# Python virtual environment
+.venv/
+
+# Cache directories
+__pycache__/
+.mypy_cache/
+.ruff_cache/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+*.spec
+
+# Misc
+.DS_Store
+old/

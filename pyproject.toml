@@ -1,0 +1,57 @@
+[project]
+name = "Wendlerizer"
+version = "0.1.0"
+description = "A Flask app for generating Jim Wendler's 5/3/1 strength training programs"
+license = { file = "LICENSE" }
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = ["flask", "pydantic"]
+
+[project.urls]
+Repository = "https://github.com/natethor/Wendlerizer"
+
+[project.optional-dependencies]
+dev = ["ruff", "mypy", "types-flask"]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+wendlerizer = "src.main:main"
+
+[tool.setuptools]
+package-dir = { "" = "." }
+
+[tool.ruff]
+target-version = "py313"
+indent-width = 4
+line-length = 100
+exclude = ["*.json"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "W", "C90"]
+
+[tool.ruff.format]
+indent-style = "space"
+line-ending = "auto"
+quote-style = "double"
+
+[tool.mypy]
+disallow_untyped_defs = true
+python_version = "3.13"
+warn_return_any = true
+strict = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+plugins = ["pydantic.mypy"]
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"

@@ -1,0 +1,234 @@
+<!-- Program display template -->
+<div class="bg-white shadow-lg rounded-lg overflow-hidden">
+  <!-- Program Header -->
+  <div class="px-6 py-4 bg-indigo-600 text-white">
+    <h2 class="text-2xl font-bold">{{ name }}'s 5/3/1 Program</h2>
+    <p class="text-indigo-100">{{ program.notes }}</p>
+  </div>
+
+  <!-- Training Maxes Section -->
+  <div class="px-6 py-4 bg-gray-50 border-b">
+    <h3 class="text-lg font-semibold mb-2">Training Maxes</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {% for lift, tm in program.training_maxes.items() %}
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600">{{ lift }}</span>
+        <span class="font-medium">{{ tm }} {{ units }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Notes and Tips -->
+  <div class="px-6 py-4 bg-gray-50 border-b notes-section">
+    <div class="text-sm text-gray-600">
+      <p class="mb-2"><strong>Notes:</strong></p>
+      <ul class="list-disc pl-5 space-y-1">
+        <li>"+" indicates AMRAP (As Many Reps As Possible)</li>
+        <li>Rest 2-3 minutes between main sets</li>
+        <li>FSL = First Set Last (use first working set weight)</li>
+        <li>RPE = Rate of Perceived Exertion (gauge intensity by feel)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Weekly Programs -->
+  {% for week in program.cycle %}
+  <div class="week-container px-6 py-4 border-b last:border-b-0">
+    <h3 class="text-xl font-semibold mb-4">Week {{ loop.index }}</h3>
+
+    <!-- Daily Sessions Grid -->
+    <div class="sessions-grid">
+      {% for session in week %}
+      <div class="session-card mb-6 last:mb-0">
+        <h4 class="text-lg font-medium text-indigo-600 mb-3">
+          {{ session.name }} Day
+        </h4>
+
+        <!-- Exercises -->
+        {% for exercise in session.exercises %}
+        <div class="mb-4 last:mb-0">
+          <h5 class="font-medium text-gray-700 mb-2">{{ exercise.lift_type }}</h5>
+          <div class="pl-4 space-y-1">
+            {% for set in exercise.sets %}
+            <div class="flex items-center text-gray-600">
+              {% if exercise.lift_type in bodyweight_lifts %}
+              <span>Bodyweight × {{ set.reps }}</span>
+              {% elif exercise.lift_type in rpe_lifts %}
+              <span>{{ set.reps }} (RPE based)</span>
+              {% else %}
+              <span>{{ set.weight }} {{ units }} × {{ set.reps }}</span>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+
+  <!-- Download/Print Options -->
+  <div class="px-6 py-4 bg-gray-100 flex justify-end space-x-4">
+    <button
+      class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      onclick="window.print()"
+    >
+      Print Program
+    </button>
+  </div>
+</div>
+
+<!-- Screen and Print Styles -->
+<style>
+  /* 2x2 Grid Layout for Sessions (screen and print) */
+  .sessions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .session-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    background-color: #fafafa;
+  }
+
+  @media print {
+    /* Hide non-essential elements */
+    nav, button, .htmx-indicator, .no-print {
+      display: none !important;
+    }
+
+    /* Remove shadows and backgrounds for cleaner print */
+    .shadow, .shadow-lg {
+      box-shadow: none !important;
+    }
+
+    .bg-gray-50, .bg-gray-100 {
+      background-color: white !important;
+    }
+
+    /* Reduce padding for more compact output */
+    .px-6 {
+      padding-left: 0.5rem !important;
+      padding-right: 0.5rem !important;
+    }
+
+    .py-4, .py-6 {
+      padding-top: 0.5rem !important;
+      padding-bottom: 0.5rem !important;
+    }
+
+    /* Make header more compact */
+    .bg-indigo-600 {
+      background-color: white !important;
+      color: black !important;
+      border-bottom: 2px solid black !important;
+    }
+
+    .text-white {
+      color: black !important;
+    }
+
+    .text-indigo-100, .text-indigo-600 {
+      color: #333 !important;
+    }
+
+    /* Improve readability */
+    body {
+      background: white !important;
+    }
+
+    /* Notes section stays on first page */
+    .notes-section {
+      page-break-after: avoid !important;
+    }
+
+    /* 2x2 Grid Layout for Sessions */
+    .sessions-grid {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      grid-template-rows: 1fr 1fr !important;
+      gap: 1rem !important;
+      margin-bottom: 1rem !important;
+    }
+
+    .session-card {
+      border: 1px solid #ddd !important;
+      padding: 0.5rem !important;
+      margin-bottom: 0 !important;
+      page-break-inside: avoid !important;
+      background-color: white !important;
+    }
+
+    /* Each week on its own page */
+    .week-container {
+      page-break-before: always !important;
+      page-break-inside: avoid !important;
+    }
+
+    .week-container:first-child {
+      page-break-before: auto !important;
+    }
+
+    .week-container:last-child {
+      page-break-after: auto !important;
+    }
+
+    /* Better page breaks */
+    h2, h3, h4, h5 {
+      page-break-after: avoid !important;
+    }
+
+    /* Ensure exercises stay together */
+    .mb-4 {
+      page-break-inside: avoid !important;
+    }
+
+    /* Page setup */
+    @page {
+      size: portrait;
+      margin: 1.5cm;
+    }
+
+    /* Make text smaller and more compact */
+    .text-2xl {
+      font-size: 1.25rem !important;
+    }
+
+    .text-xl {
+      font-size: 1.1rem !important;
+      margin-bottom: 0.5rem !important;
+    }
+
+    .text-lg {
+      font-size: 1rem !important;
+      margin-bottom: 0.25rem !important;
+    }
+
+    .font-medium {
+      font-size: 0.85rem !important;
+    }
+
+    .text-gray-600 {
+      font-size: 0.8rem !important;
+    }
+
+    .space-y-1 > * + * {
+      margin-top: 0.15rem !important;
+    }
+
+    .pl-4 {
+      padding-left: 0.5rem !important;
+    }
+
+    .mb-3 {
+      margin-bottom: 0.25rem !important;
+    }
+  }
+</style>

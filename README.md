@@ -1,48 +1,62 @@
 # The Wendlerizer
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
+A web application for generating Jim Wendler's 5/3/1 strength training programs.
 
-I love Jim Wendler's 5/3/1 program, and my appreciation has grown the longer I
-do it and use it to coach athletes. In an attempt to help spread the love, I
-wrote this quick and kind of crappy class to help me crank out the numbers for
-members of the Barbell Club, mostly just because it's a lot cooler than using a
-spreadsheet (see unicorn.txt).
+## About This Fork
 
-The Wendlerizer ended up getting recycled into generating programs for the
-[CrossFit Local](http://crossfitlocal.com) CrossFit Total Challenge. It was
-updated to be runnable as a mod_python wsgi script to alleviate the need
-for me to manually enter numbers for all of my athletes. It has since
-been updated again as a Flask app.
+This is a modernized fork of the original Wendlerizer project. The core concept remains the same - helping athletes generate customized 5/3/1 training programs - but the implementation has been rewritten with modern tools and practices:
 
-Be warned! It has been in service for three years with very few changes to the
-actual core functionality; most of the changes have been to reskin the input
-into different web formats. It is in dire need of "modernization" to my
-professional coding standards. At this point a complete rewrite is probably in
-order!
+- **Modern Python**: Type hints, Pydantic models, dataclasses
+- **Flask**: Updated web framework and structure
+- **Modern Frontend**: Tailwind CSS, HTMX for dynamic interactions
+- **Modern Tooling**: uv for dependency management, pyproject.toml for configuration
+- **Improved UX**: Responsive design, print-friendly 2x2 weekly workout grids
 
-## What's Here
-- TrainingProgram.py is the actual class.
-- ExampleProgram.py is an example of putting it to use.
-- Wendlerizer is a Flask app for generating the programming CrossFitLocal
-  uses for its annual strength challenge.
-  - Wendlerizer.py: App code.
-  - notes.txt and unicorn.txt: text files added at the end of the program.
-  - static, templates: Flask support files.
-  - requirements.txt: Pip requirements file for use in a Virtualenv.
+## Running Locally
 
-## Running it locally
-If you just want to run this thing and get a training plan, the `Wendlerizer` site code is pretty easy to run. All examples are given for *nix shells. Windows users, you should be able to translate this pretty easily.
-1. Install python3.
-2. `python3 -m venv venv` to create a virtual environment for the project.
-3. `source venv/bin/activate` to activate the virtualenv.
-4. `pip install -r requirements.txt` to install the dependencies.
-5. `python Wendlerizer.py` to run the web server and app.
-6. Visit http://localhost:8080 to view the app in your web browser.
+This project uses [uv](https://github.com/astral-sh/uv) for fast, modern Python package management.
 
-## TODO
-- Complete rewrite of TrainingProgram.
-- Include mod_python code, potentially as a dead branch.
-- Output was originally supposed to be beautifully old school. I'm kind of over
-  it. Do a new design on output.
+1. Install uv (if you haven't already):
 
+   ```bash
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   ```
 
+2. Clone the repository and uv sync:
+
+   ```bash
+   git clone https://github.com/natethor/Wendlerizer.git
+   cd Wendlerizer
+   uv sync
+   ```
+
+3. Run the application:
+
+   ```bash
+   uv run wendlerizer
+   ```
+
+4. Visit <http://localhost:8080> in your web browser
+
+The app runs in development mode with auto-reload enabled, so changes to the code will automatically restart the server.
+
+## Project Structure
+
+```text
+src/
+├── main.py              # Flask application and routes
+├── models.py            # Data models, validation schemas, and workout patterns
+├── utils.py             # Utility functions (weight rounding, 1RM estimation)
+└── templates/           # Jinja2 templates
+    ├── base.html
+    ├── index.html
+    └── partials/
+        └── program.html
+```
+
+## Credits
+
+Original concept and implementation by the Wendlerizer project contributors.
+Modernized fork maintained by [natethor](https://github.com/natethor).
+
+Jim Wendler's 5/3/1 program methodology is detailed in his books "5/3/1: The Simplest and Most Effective Training System for Raw Strength" and "Beyond 5/3/1".
